@@ -1,8 +1,3 @@
-import { withAuth } from "next-auth/middleware";
-export default withAuth({
-    secret: process.env.NEXTAUTH_URL,
-});
+export { default } from "next-auth/middleware";
 
-export const config = { 
-    matcher: ["/"], 
-};
+export const config = { matcher: ["/"] };
