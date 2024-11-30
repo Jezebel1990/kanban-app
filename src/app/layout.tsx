@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/redux/provider";
 import Navbar from "./components/Navbar/Navbar";
+import React from "react";
 
 const pjs = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap" });
 
