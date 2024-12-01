@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useFetchDataFromDbQuery } from "@/components/redux/services/apiSlice";
-import { useAppSelector } from "@/components/redux/hooks";
+import { useAppSelector, useAppDispatch } from "@/components/redux/hooks";
 import { getCurrentBoardName } from "@/components/redux/features/appSlice";
 import { MdEdit, MdDelete} from "react-icons/md";
+import { openAddAndEditBoardModal } from '@/components/redux/features/appSlice';
 
 interface ITask {
     title: string;
@@ -19,6 +20,8 @@ export default function BoardTasks() {
     const { isLoading, data } = useFetchDataFromDbQuery();
     const [columns, setColumns] = useState<Column[]>([]);
     const activeBoard = useAppSelector(getCurrentBoardName);
+    const dispatch = useAppDispatch();
+    
 
     useEffect(() => {
         if (data !== undefined) {
@@ -78,7 +81,10 @@ export default function BoardTasks() {
 );
 })}
 {columns.length < 7 ? (
-                <div className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center border shadow-orange">
+  <div 
+     onClick={() => dispatch(openAddAndEditBoardModal("Editar Cartão"))
+       }
+         className="rounded-md bg-white w-[17.5rem] mt-12 shrink-0 flex justify-center items-center border shadow-orange">
          <p className="cursor-pointer font-bold text-black text-2xl">
             + Nova Coluna
             </p>
