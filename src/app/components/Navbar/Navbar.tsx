@@ -14,7 +14,7 @@ export default function Navbar() {
 
     useEffect(() => {
       if (data) {
-        const activeBoard = data[0].boards[0];
+        const activeBoard = data[0]?.boards[0];
         dispatch(setCurrentBoardName(activeBoard.name));
       }
     }, [data]);
@@ -40,7 +40,7 @@ const currentBoardName = useAppSelector(getCurrentBoardName);
                 <p>+ Nova Tarefa</p>
               </button>
               <div className='relative flex items-center'>
-              <button   onClick={() => setShow(!show)} className="text-3xl mb-4">
+              <button onClick={() => setShow(!show)} className="text-3xl mb-4">
                ...
               </button>
               <Dropdown show={show}/>

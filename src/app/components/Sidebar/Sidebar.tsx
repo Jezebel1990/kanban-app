@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useAppDispatch } from "@/components/redux/hooks";
 import { useFetchDataFromDbQuery } from "@/components/redux/services/apiSlice";
-import { setCurrentBoardName } from "@/components/redux/features/appSlice";
-import { openAddAndEditBoardModal } from "@/components/redux/features/appSlice";
+import { setCurrentBoardName, openAddAndEditBoardModal } from "@/components/redux/features/appSlice";
 
 export default function Sidebar() {
 

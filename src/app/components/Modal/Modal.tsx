@@ -34,8 +34,8 @@ export function Modal({ children, isOpen, onRequestClose }: ModalProps) {
 
         return (
             <ReactModal
-              onRequestClose={onRequestClose}
               isOpen={isOpen}
+              onRequestClose={onRequestClose}
               style={modalStyle}
             >
               {children}
