@@ -1,5 +1,5 @@
 import { useAppDispatch } from '@/components/redux/hooks'
-import { openAddAndEditBoardModal } from '@/components/redux/features/appSlice';
+import { openAddAndEditBoardModal, openDeleteBoardAndTaskModal } from '@/components/redux/features/appSlice';
 
 interface IDropdown {
     show: boolean
@@ -20,8 +20,10 @@ return (
    onClick={() => dispatch(openAddAndEditBoardModal('Editar Cartão'))} 
    className="text-sm px-4 py-2">Editar Cartão</button>
   </div>
-  <div className="hover:bg[#FFD700]">
-    <button className="text-sm px-4 py-2">
+  <div className="hover:bg-[#FFD700]">
+    <button 
+    onClick={() => dispatch(openDeleteBoardAndTaskModal({variant: "Deletar este cartão?"}))}
+     className="text-sm px-4 py-2">
       Deletar Cartão
     </button>
   </div>

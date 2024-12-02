@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import { data } from "./utils/data";
 import AddAndEditBoardModal from "../app/components/EditBoardModal/AddAndEditBoardModal";
+import AddAndEditTaskModal from "../app/components/EditTaskModal/AddAndEditTaskModal";
+import DeleteBoardAndTaskModal from "../app/components/DeleteBoardAndTask/DeleteBoardAndTask";
 
 export default function Home() {
 
@@ -58,6 +60,8 @@ export default function Home() {
     <Sidebar />
     <BoardTasks />
     <AddAndEditBoardModal />
+    <AddAndEditTaskModal />
+    <DeleteBoardAndTaskModal />
    </main>
   );
 }      

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Dropdown from '../Dropdown/Dropdown';
 import { useFetchDataFromDbQuery } from '@/components/redux/services/apiSlice';
 import { useAppDispatch, useAppSelector } from '@/components/redux/hooks';
-import { setCurrentBoardName, getCurrentBoardName } from '@/components/redux/features/appSlice';
+import { setCurrentBoardName, getCurrentBoardName, openAddAndEditTaskModal } from '@/components/redux/features/appSlice';
 
 export default function Navbar() {
 
@@ -33,7 +33,10 @@ const currentBoardName = useAppSelector(getCurrentBoardName);
             </p>
 
             <div className="flex items-center space-x-3">
-              <button className="bg-[#FFBF00] text-white px-4 py-2 flex rounded-3xl items-center space-x-2">
+              <button 
+              type='button'
+              onClick={() => dispatch(openAddAndEditTaskModal({variant: 'Adicionar Nova Tarefa'}))}
+              className="bg-[#FFBF00] text-white px-4 py-2 flex rounded-3xl items-center space-x-2">
                 <p>+ Nova Tarefa</p>
               </button>
               <div className='relative flex items-center'>

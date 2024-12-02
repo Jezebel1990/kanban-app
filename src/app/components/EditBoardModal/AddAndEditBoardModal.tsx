@@ -12,10 +12,10 @@ import {
         useFetchDataFromDbQuery,
         useUpdateBoardToDbMutation,
       } from "@/components/redux/services/apiSlice";
-      import { FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import { id } from '../../utils/data';
 
-interface IBoardData {
+interface IAddBoardData {
     id: string,
     name: string;
     columns: {
@@ -32,14 +32,14 @@ interface IBoardData {
       {
         id: id(),
         name: "",
-        tasks:
-   [],
+        tasks: [],
       },
-    ],};
+    ],
+};
 
 export default function AddAndEditBoardModal() {
 
-    const [boardData, setBoardData] = useState<IBoardData>();
+    const [boardData, setBoardData] = useState<IAddBoardData>();
     const [isBoardNameEmpty, setIsBoardNameEmpty] = useState<boolean>(false);
     const [emptyColumnIndex, setEmptyColumnIndex] = useState<number>();
 
@@ -58,7 +58,7 @@ export default function AddAndEditBoardModal() {
           if (isVariantAdd) {
             setBoardData(addBoardData);
           } else {
-            const activeBoard = data[0].boards.find(
+            const activeBoard = data[0]?.boards.find(
               (board: { name: string }) => board.name === currentBoardTitle
             );
             setBoardData(activeBoard);
@@ -198,7 +198,7 @@ export default function AddAndEditBoardModal() {
                   Nome do Cartão
                 </label>
                 <div className="pt-2">
-                    <input 
+                <input 
                     id="boardName"
                     className={`${
                         isBoardNameEmpty ? "border-red-500" : "border-[#FFFAA0]"
@@ -235,7 +235,7 @@ export default function AddAndEditBoardModal() {
                                   ? "border-red-500"
                                   : "border-[#FFFAA0]"
                               } border border-[#FFFAA0] focus:outline-none text-sm cursor-pointer w-full p-2 rounded`}
-                              placeholder="e.g Doing"
+                              placeholder="ex. Fazer Compras"
                               onChange={(e) => handleColumnNameChange(index)(e)}
                               value={name!}
                             />
@@ -290,8 +290,7 @@ export default function AddAndEditBoardModal() {
             </div>
           </>
         )}
-
      </ModalBody>
-   </Modal>
+</Modal>
  );
 }
