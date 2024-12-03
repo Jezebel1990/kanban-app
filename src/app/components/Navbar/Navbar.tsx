@@ -22,9 +22,9 @@ export default function Navbar() {
 const currentBoardName = useAppSelector(getCurrentBoardName);
 
     return (
-        <nav className="bg-white border flex h-24">
-          <div className="flex-none w-[18.75rem] border-r-2 flex items-center pl-[2.12rem]">
-            <p className="font-bold text-3xl">Planeja+</p>
+        <nav className="bg-white border-b-2 flex h-24">
+          <div className="flex-none w-[18.75rem] border-b-2  border-white flex items-center pl-[2.12rem] bg-[#0e1726]">
+            <p className="font-bold text-3xl text-white">Planeja+</p>
           </div>
 
           <div className="flex justify-between w-full items-center pr-[2.12rem]">

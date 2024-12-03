@@ -4,215 +4,231 @@ import { Modal, ModalBody } from "../Modal/Modal";
 import { useAppSelector, useAppDispatch } from "@/components/redux/hooks";
 
 import {
-    getAddAndEditBoardModalValue,
-    getAddAndEditBoardModalVariantValue,
-    closeAddAndEditBoardModal,
-    getCurrentBoardName,
-    } from "@/components/redux/features/appSlice";
-    import {
-        useFetchDataFromDbQuery,
-        useUpdateBoardToDbMutation,
-      } from "@/components/redux/services/apiSlice";
+  getAddAndEditBoardModalValue,
+  getAddAndEditBoardModalVariantValue,
+  closeAddAndEditBoardModal,
+  getCurrentBoardName,
+} from "@/components/redux/features/appSlice";
+import {
+  useFetchDataFromDbQuery,
+  useUpdateBoardToDbMutation,
+} from "@/components/redux/services/apiSlice";
 import { FaTimes } from "react-icons/fa";
 import { id } from '../../utils/data';
 
 interface IAddBoardData {
-    id: string,
+  id: string,
+  name: string;
+  columns: {
+    id: string;
     name: string;
-    columns: {
-      id: string;
-      name: string;
-      columns?: { name: string; tasks?: { [key: string]: any }[] };
-    }[];
-  }
+    columns?: { name: string; tasks?: { [key: string]: any }[] };
+  }[];
+}
 
-  const addBoardData = {
-    id: id(),
-    name: "",
-    columns: [
-      {
-        id: id(),
-        name: "",
-        tasks: [],
-      },
-    ],
+const addBoardData = {
+  id: id(),
+  name: "",
+  columns: [
+    {
+      id: id(),
+      name: "",
+      tasks: [],
+    },
+  ],
 };
 
 export default function AddAndEditBoardModal() {
+  //manage the board data state
+  const [boardData, setBoardData] = useState<IAddBoardData>();
+  // check if the board name field is empty
+  const [isBoardNameEmpty, setIsBoardNameEmpty] = useState<boolean>(false);
+  // will be used to check if any of the board column field is empty
+  const [emptyColumnIndex, setEmptyColumnIndex] = useState<number>();
 
-    const [boardData, setBoardData] = useState<IAddBoardData>();
-    const [isBoardNameEmpty, setIsBoardNameEmpty] = useState<boolean>(false);
-    const [emptyColumnIndex, setEmptyColumnIndex] = useState<number>();
+  // get the variant of the modal
+  const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue);
+  // check the type of the open modal, whether Add new board, or Edit board
+  const isVariantAdd = modalVariant === "Adicionar Novo Quadro";
+  const dispatch = useAppDispatch();
+  // opens that modal is isOpen evaluates to true
+  const isOpen = useAppSelector(getAddAndEditBoardModalValue);
+  const currentBoardTitle = useAppSelector(getCurrentBoardName);
+  // close the modal
+  const closeModal = () => dispatch(closeAddAndEditBoardModal());
+  // Fetch data from the database to populate the edit board modal
+  const { data } = useFetchDataFromDbQuery();
+  // Mutation hook for updating the board in the database
+  const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
-    const modalVariant = useAppSelector(getAddAndEditBoardModalVariantValue);
-    const isVariantAdd = modalVariant === "Adicione Novo Cartão";
-    const dispatch = useAppDispatch();
-    const isOpen = useAppSelector(getAddAndEditBoardModalValue);
-    const currentBoardTitle = useAppSelector(getCurrentBoardName);
-    const closeModal = () => dispatch(closeAddAndEditBoardModal());
-    const { data } = useFetchDataFromDbQuery();
-    const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
+  // Effect to set initial data for the modal based on the variant
+  useEffect(() => {
+    if (data) {
+      if (isVariantAdd) {
+        setBoardData(addBoardData);
+      } else {
+        const activeBoard = data[0]?.boards.find(
+          (board: { name: string }) => board.name === currentBoardTitle
+        );
+        setBoardData(activeBoard);
+      }
+    }
+  }, [data, modalVariant]);
 
-    useEffect(() => {
-        if (data) {
-    
-          if (isVariantAdd) {
-            setBoardData(addBoardData);
-          } else {
-            const activeBoard = data[0]?.boards.find(
-              (board: { name: string }) => board.name === currentBoardTitle
-            );
-            setBoardData(activeBoard);
+  // Effect to clear error messages after a certain time
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setIsBoardNameEmpty(false);
+      setEmptyColumnIndex(undefined);
+    }, 3000);
+    return () => clearTimeout(timeoutId);
+  }, [emptyColumnIndex, isBoardNameEmpty]);
+
+  // Handler for board name change
+  const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (boardData) {
+      const newName = { ...boardData, name: e.target.value };
+      setBoardData(newName);
+    }
+  };
+
+  // Handler for column name change. These kind of functions are called closures
+
+  const handleColumnNameChange = (index: number) => {
+    return function (e: React.ChangeEvent<HTMLInputElement>) {
+      // handle change for create new board modal
+      if (boardData) {
+        const modifyColumns = boardData.columns.map((column, columnIndex) => {
+          if (columnIndex === index) {
+            return { ...column, name: e.target.value };
           }
-        }
-      }, [data, modalVariant]);
+          return column;
+        });
+        const modifiedColumn = { ...boardData, columns: modifyColumns };
+        setBoardData(modifiedColumn);
+      }
+    };
+  };
 
-      useEffect(() => {
-        const timeoutId = setTimeout(() => {
-          setIsBoardNameEmpty(false);
-          setEmptyColumnIndex(undefined);
-        }, 3000);
-        return () => clearTimeout(timeoutId);
-      }, [emptyColumnIndex, isBoardNameEmpty]);
+  // Handler for adding a new column to the form
+  const handleAddNewColumn = () => {
+    // max columns we want to have in a board is 7
+    if (boardData && boardData.columns.length < 6) {
+      // Make a copy of the existing boardData
+      const updatedBoardData = { ...boardData };
+      // Create a new column object
+      const newColumn = { id: id(), name: "", tasks: [] };
+      // Push the new column to the columns array in the copy
+      updatedBoardData.columns = [...updatedBoardData.columns, newColumn];
+      // Update the state with the modified copy
+      setBoardData(updatedBoardData);
+    }
+  };
 
-      const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (boardData) {
-          const newName = { ...boardData, name: e.target.value };
-          setBoardData(newName);
-        }
-      };
+  // Handler for deleting a column in the form
+  const handleDeleteColumn = (index: number) => {
+    if (boardData) {
+      const filteredColumns = boardData.columns.filter(
+        (_column, columnIndex) => columnIndex !== index
+      );
+      setBoardData({ ...boardData, columns: filteredColumns });
+    }
+  };
 
-      const handleColumnNameChange = (index: number) => {
-        return function (e: React.ChangeEvent<HTMLInputElement>) {
-          // handle change for create new board modal
-          if (boardData) {
-            const modifyColumns = boardData.columns.map((column, columnIndex) => {
-              if (columnIndex === index) {
-                return { ...column, name: e.target.value };
-              }
-              return column;
-            });
-            const modifiedColumn = { ...boardData, columns: modifyColumns };
-            setBoardData(modifiedColumn);
-          }
+  // Handler for adding a new board to the database
+  const handleAddNewBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    // check if any of the column names are empty before submiting
+    const emptyColumnStringChecker = boardData?.columns.some(
+      (column) => column.name === ""
+    );
+
+    //condition to run if the board name is empty
+    if (boardData?.name === "") {
+      setIsBoardNameEmpty(true);
+    }
+
+    //if any of the column names is empty, update the emptyColumnIndex with its index
+    if (emptyColumnStringChecker) {
+      const emptyColumn = boardData?.columns.findIndex(
+        (column) => column.name == ""
+      );
+      setEmptyColumnIndex(emptyColumn);
+    }
+
+    if (boardData?.name !== "" && !emptyColumnStringChecker) {
+      //submit to the database after verifying that the board name and none of the column names aren't empty
+      if (data) {
+        let [boards] = data;
+        const addBoard = [...boards.boards, boardData];
+        boards = addBoard;
+        updateBoardToDb(boards);
+      }
+    }
+  };
+
+  // Handler for editing a board in the database
+  const handleEditBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const emptyColumnStringChecker = boardData?.columns.some(
+      (column) => column.name === ""
+    );
+    //condition to run if the board name is empty
+    if (boardData?.name === "") {
+      setIsBoardNameEmpty(true);
+    }
+    //if any of the column names is empty, update the emptyColumnIndex with its index
+    if (emptyColumnStringChecker) {
+      const emptyColumn = boardData?.columns.findIndex(
+        (column) => column.name == ""
+      );
+      setEmptyColumnIndex(emptyColumn);
+    }
+    //submit to the database after verifying that the board name and none of the column names aren't empty
+    if (boardData?.name !== "" && !emptyColumnStringChecker) {
+      if (data) {
+        const [boards] = data;
+        const boardsCopy = [...boards.boards];
+        const activeBoardIndex = boardsCopy.findIndex(
+          (board: { name: string }) => board.name === currentBoardTitle
+        );
+        const updatedBoard = {
+          ...boards.boards[activeBoardIndex],
+          name: boardData!.name,
+          columns: boardData!.columns,
         };
-      };
+        boardsCopy[activeBoardIndex] = updatedBoard;
+        updateBoardToDb(boardsCopy);
+      }
+    }
+  };
 
-      const handleAddNewColumn = () => {
-        // max columns we want to have in a board is 7
-        if (boardData && boardData.columns.length < 6) {
-          // Make a copy of the existing boardData
-          const updatedBoardData = { ...boardData };
-          // Create a new column object
-          const newColumn = { id: id(), name: "", tasks: [] };
-          // Push the new column to the columns array in the copy
-          updatedBoardData.columns = [...updatedBoardData.columns, newColumn];
-          // Update the state with the modified copy
-          setBoardData(updatedBoardData);
-        }
-      };
-
-      const handleDeleteColumn = (index: number) => {
-        if (boardData) {
-          const filteredColumns = boardData.columns.filter(
-            (_column, columnIndex) => columnIndex !== index
-          );
-          setBoardData({ ...boardData, columns: filteredColumns });
-        }
-      };
-
-      const handleAddNewBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-    
-        // check if any of the column names are empty before submiting
-        const emptyColumnStringChecker = boardData?.columns.some(
-          (column) => column.name === ""
-        ); 
-    
-        //condition to run if the board name is empty
-        if (boardData?.name === "") {
-          setIsBoardNameEmpty(true);
-        }
-
-        if (emptyColumnStringChecker) {
-            const emptyColumn = boardData?.columns.findIndex(
-              (column) => column.name == ""
-            );
-            setEmptyColumnIndex(emptyColumn);
-          }
-      
-          if (boardData?.name !== "" && !emptyColumnStringChecker) {
-            //submit to the database after verifying that the board name and none of the column names aren't empty
-            if (data) {
-              let [boards] = data;
-              const addBoard = [...boards.boards, boardData];
-              boards = addBoard;
-              updateBoardToDb(boards);
-            }
-          }
-        };
-
-        const handleEditBoardToDb = (e: React.FormEvent<HTMLButtonElement>) => {
-            e.preventDefault();
-            const emptyColumnStringChecker = boardData?.columns.some(
-              (column) => column.name === ""
-            );
-            //condition to run if the board name is empty
-            if (boardData?.name === "") {
-              setIsBoardNameEmpty(true);
-            }
-            //if any of the column names is empty, update the emptyColumnIndex with its index
-            if (emptyColumnStringChecker) {
-              const emptyColumn = boardData?.columns.findIndex(
-                (column) => column.name == ""
-              );
-              setEmptyColumnIndex(emptyColumn);
-            }
-            //submit to the database after verifying that the board name and none of the column names aren't empty
-            if (boardData?.name !== "" && !emptyColumnStringChecker) {
-              if (data) {
-                const [boards] = data;
-                const boardsCopy = [...boards.boards]; 
-                const activeBoardIndex = boardsCopy.findIndex(
-                  (board: { name: string }) => board.name === currentBoardTitle
-                );
-                const updatedBoard = {
-                  ...boards.boards[activeBoardIndex],
-                  name: boardData!.name,
-                  columns: boardData!.columns,
-                } ;
-                boardsCopy[activeBoardIndex] = updatedBoard;
-                updateBoardToDb(boardsCopy);
-              }
-            }
-          };
-
- return (
-   <Modal isOpen={isOpen} onRequestClose={closeModal}>
-     <ModalBody>
-     {boardData && (
+  return (
+    <Modal isOpen={isOpen} onRequestClose={closeModal}>
+      <ModalBody>
+        {boardData && (
           <>
-      <p className="text-lg font-bold">{modalVariant}</p>
-      <div className="py-6">
+            <p className="text-lg font-bold">{modalVariant}</p>
+            <div className="py-6">
               <div>
                 <label htmlFor="boardName" className="text-sm">
-                  Nome do Cartão
+                  Nome do Quadro
                 </label>
                 <div className="pt-2">
-                <input 
+                  <input
                     id="boardName"
-                    className={`${
-                        isBoardNameEmpty ? "border-red-500" : "border-[#FFFAA0]"
+                    className={`${isBoardNameEmpty ? "border-red-500" : "border-[#FFFAA0]"
                       } border w-full p-2 rounded text-sm cursor-pointer focus:outline-none`}
                     placeholder="Nome"
                     value={boardData.name}
                     onChange={handleBoardNameChange}
-                    />
+                  />
                 </div>
 
                 {isBoardNameEmpty ? (
                   <p className="text-xs text-red-500">
-                    O nome do cartão não pode estar vazio
+                    O nome do quadro não pode estar vazio
                   </p>
                 ) : (
                   ""
@@ -221,7 +237,7 @@ export default function AddAndEditBoardModal() {
 
               <div className="mt-6">
                 <label htmlFor="" className="text-sm">
-                  Coluna de Cartões
+                  Nome das Colunas
                 </label>
                 {boardData &&
                   boardData.columns.map(
@@ -231,18 +247,17 @@ export default function AddAndEditBoardModal() {
                         <div key={id} className="pt-2">
                           <div className="flex items-center space-x-2">
                             <input
-                              className={`${
-                                emptyColumnIndex === index
+                              className={`${emptyColumnIndex === index
                                   ? "border-red-500"
                                   : "border-[#FFFAA0]"
-                              } border border-[#FFFAA0] focus:outline-none text-sm cursor-pointer w-full p-2 rounded`}
-                              placeholder="ex. Fazer Compras"
+                                } border border-[#FFFAA0] focus:outline-none text-sm cursor-pointer w-full p-2 rounded`}
+                              placeholder="ex. Fazer, Fazendo, Aprovação, Feito ..."
                               onChange={(e) => handleColumnNameChange(index)(e)}
                               value={name!}
                             />
                             <div>
                               <FaTimes
-                              className="text-red-500"
+                                className="text-red-500"
                                 onClick={() => handleDeleteColumn(index)}
                               />
                             </div>
@@ -250,7 +265,7 @@ export default function AddAndEditBoardModal() {
                           {/* display this error if the board name is empty */}
                           {emptyColumnIndex === index ? (
                             <p className="text-xs text-red-500">
-                            Nome da coluna não pode estar vazio
+                              Nome da coluna não pode estar vazio
                             </p>
                           ) : (
                             ""
@@ -284,14 +299,14 @@ export default function AddAndEditBoardModal() {
                   <p>
                     {isLoading
                       ? "Carregando"
-                      : `${isVariantAdd ? "Criar Novo Cartão" : "Salvar Alterações"}`}
+                      : `${isVariantAdd ? "Criar Novo Quadro" : "Salvar Alterações"}`}
                   </p>
                 </button>
               </div>
             </div>
           </>
         )}
-     </ModalBody>
-</Modal>
- );
+      </ModalBody>
+    </Modal>
+  );
 }

@@ -4,29 +4,29 @@
    import  { db } from "@/components/app/utils/firebaseConfig";
 
    //Create the Firestore API using createApi
-export const fireStoreApi = createApi({
-   reducerPath: "firestoreApi",
-   baseQuery: fakeBaseQuery(),
-   tagTypes: ["Tasks"],
-   endpoints: (builder) => ({
-    fetchDataFromDb: builder.query<{[key: string]: any}[], void>({
+   export const fireStoreApi = createApi({
+    reducerPath: "firestoreApi",
+    baseQuery: fakeBaseQuery(),
+    tagTypes: ["Tasks"],
+    endpoints: (builder) => ({
+      fetchDataFromDb: builder.query<{[key: string]: any}[], void>({
         async queryFn() {
-            try {
-                const session = await getSession();
-                const { user } = session!;
-                  const ref = collection(db, `users/${user?.email}/tasks`);
-                  const querySnapshot = await getDocs(ref);
-                  const boards = querySnapshot.docs.map((doc) => {
-                  return doc.data()});
+          try {
+            const session = await getSession();
+              const { user } = session!;
+              const ref = collection(db, `users/${user?.email}/tasks`);
+              const querySnapshot = await getDocs(ref);
+              const boards = querySnapshot.docs.map((doc) => {
+                return doc.data()});
               return { data: boards };
-              } catch (e: any) {
-                return { error: e.message };
-              }
-            },
-            providesTags: ["Tasks"],
-    }),
-     // endpoint for CRUD actions
-     updateBoardToDb: builder.mutation({
+          } catch (e: any) {
+            return { error: e.message };
+          }
+        },
+        providesTags: ["Tasks"],
+      }),
+      // endpoint for CRUD actions
+      updateBoardToDb: builder.mutation({
         async queryFn(arg) {
           try {
             const session = await getSession();
@@ -46,9 +46,11 @@ export const fireStoreApi = createApi({
             return Promise.reject({ error: e });
           }
         },
-        invalidatesTags: ["Tasks"],
-   }),
-}),
-});
-
-   export const { useFetchDataFromDbQuery, useUpdateBoardToDbMutation } = fireStoreApi;
+        invalidatesTags: ["Tasks"], // this will be used to invalidate the initially fetched data. 
+        // Data will have to be refetched once this enpoint has been called
+      }),
+    }),
+  });
+  
+  // Export hooks for using the created endpoint
+  export const { useFetchDataFromDbQuery, useUpdateBoardToDbMutation } = fireStoreApi;

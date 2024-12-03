@@ -30,7 +30,7 @@ import { Modal, ModalBody } from "../Modal/Modal";
     const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
         if (data) {
-          if (modalVariant === "Deletar este cartão?") {
+          if (modalVariant === "Deletar este quadro?") {
             // Implement the logic for deleting the board
             if (currentBoardName) {
               //  Assuming data is available, you need to handle the logic to update the data
@@ -80,8 +80,8 @@ import { Modal, ModalBody } from "../Modal/Modal";
             <p className="text-red font-bold text-lg">{modalVariant}</p>
             <div className="pt-6">
               <p className="text-sm text-medium-grey leading-6">
-                {modalVariant === "Deletar este cartão?"
-                  ? `Tem certeza de que deseja excluir o cartão '${currentBoardName}' ? Esta ação removerá todas as colunas
+                {modalVariant === "Deletar este quadro?"
+                  ? `Tem certeza de que deseja excluir o quadro '${currentBoardName}' ? Esta ação removerá todas as colunas
 e tarefas e não pode ser revertida.`
                   : `Tem certeza de que deseja excluir a tarefa '${taskTitle}' ? Esta ação não pode ser revertida.`}
               </p>

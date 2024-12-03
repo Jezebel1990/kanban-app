@@ -17,14 +17,14 @@ return (
 >
   <div className="hover:bg-[#FFD700]">
    <button
-   onClick={() => dispatch(openAddAndEditBoardModal('Editar Cartão'))} 
-   className="text-sm px-4 py-2">Editar Cartão</button>
+   onClick={() => dispatch(openAddAndEditBoardModal('Editar Quadro'))} 
+   className="text-sm px-4 py-2">Editar Quadro</button>
   </div>
   <div className="hover:bg-[#FFD700]">
     <button 
-    onClick={() => dispatch(openDeleteBoardAndTaskModal({variant: "Deletar este cartão?"}))}
+    onClick={() => dispatch(openDeleteBoardAndTaskModal({variant: "Deletar este quadro?"}))}
      className="text-sm px-4 py-2">
-      Deletar Cartão
+      Deletar Quadro
     </button>
   </div>
 </div>
