@@ -50,7 +50,7 @@ export default function AddAndEditBoardModal() {
     const isOpen = useAppSelector(getAddAndEditBoardModalValue);
     const currentBoardTitle = useAppSelector(getCurrentBoardName);
     const closeModal = () => dispatch(closeAddAndEditBoardModal());
-    let { data } = useFetchDataFromDbQuery();
+    const { data } = useFetchDataFromDbQuery();
     const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
     useEffect(() => {
