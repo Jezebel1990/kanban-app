@@ -1,3 +1,4 @@
+import React from "react";
 import { Modal, ModalBody } from "../Modal/Modal";
    import { useAppDispatch, useAppSelector } from "@/components/redux/hooks";
    import {
@@ -23,7 +24,7 @@ import { Modal, ModalBody } from "../Modal/Modal";
     const taskTitle = useAppSelector(getDeleteBoardAndTaskModalTitle);
     const taskIndex = useAppSelector(getDeleteBoardAndTaskModalIndex);
     const taskStatus = useAppSelector(getDeleteBoardAndTaskModalStatus);
-    let { data } = useFetchDataFromDbQuery();
+    const { data } = useFetchDataFromDbQuery();
     const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
 
     const handleDelete = (e: React.FormEvent<HTMLButtonElement>) => {

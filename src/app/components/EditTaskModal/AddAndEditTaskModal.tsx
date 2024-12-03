@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { useEffect, useState } from "react";
 import { Modal, ModalBody } from "../../components/Modal/Modal";
 import { useAppDispatch, useAppSelector } from "@/components/redux/hooks";
@@ -24,7 +24,7 @@ interface ITaskData {
   status: string;
 }
 // initial task data for the add task modal
-let initialTaskData: ITaskData = {
+const initialTaskData: ITaskData = {
   id: id(),
   title: "",
   status: "",
@@ -32,8 +32,8 @@ let initialTaskData: ITaskData = {
 
 export default function AddOrEditTaskModal() {
 
-  let { data } = useFetchDataFromDbQuery();
-  let [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
+  const { data } = useFetchDataFromDbQuery();
+  const [updateBoardToDb, { isLoading }] = useUpdateBoardToDbMutation();
   const [taskData, setTaskData] = useState<ITaskData>();
   const [isTaskTitleEmpty, setIsTaskTitleEmpty] = useState<boolean>();
   const [isTaskStatusEmpty, setIsTaskStatusEmpty] = useState<boolean>();

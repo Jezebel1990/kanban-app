@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { Modal, ModalBody } from "../Modal/Modal";
 import { useAppSelector, useAppDispatch } from "@/components/redux/hooks";
@@ -25,7 +26,7 @@ interface IAddBoardData {
     }[];
   }
 
-  let addBoardData = {
+  const addBoardData = {
     id: id(),
     name: "",
     columns: [
@@ -225,7 +226,7 @@ export default function AddAndEditBoardModal() {
                 {boardData &&
                   boardData.columns.map(
                     (column: { name: string, id: string }, index: number) => {
-                      let { name, id } = column;
+                      const { name, id } = column;
                       return (
                         <div key={id} className="pt-2">
                           <div className="flex items-center space-x-2">
