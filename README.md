@@ -14,9 +14,6 @@
 - Armazenamento de dados no Firebase Firestore.
 
 
-Gerenciador de Tarefas Kanban Full-Stack
-Bem-vindo ao repositório do Gerenciador de Tarefas Kanban, uma aplicação full-stack desenvolvida para gerenciamento de tarefas em estilo Kanban. Este projeto utiliza tecnologias modernas e boas práticas de desenvolvimento, incluindo autenticação, gerenciamento de estado, interação de arrastar e soltar, e integração com Firebase Firestore.
-
 ## 🛠️ Tecnologias Utilizadas
 - **Next.js:** Framework React para renderização server-side e geração estática.
 - **Next-auth:** Autenticação simplificada para Next.js.
@@ -29,14 +26,16 @@ Bem-vindo ao repositório do Gerenciador de Tarefas Kanban, uma aplicação full
 ## Como Rodar o Projeto
 
 1. Clone este repositório:
-   ```bash
+
+```bash
   git clone  https://github.com/Jezebel1990/kanban-app.git
   cd kanban-app
-```
+  ```
 
 2. Instale as dependências:
+
   ```bash
-    npm install
+   npm install
    ```
 3. Execute o projeto em desenvolvimento:
   ```bash
