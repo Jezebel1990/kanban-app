@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Planeja+ | Gerenciador de Tarefas Kanban Full-Stack
 
-## Getting Started
+> Esta é uma aplicação full-stack desenvolvida para gerenciamento de tarefas em estilo Kanban. Este projeto utiliza tecnologias modernas e boas práticas de desenvolvimento, incluindo autenticação, gerenciamento de estado, interação de arrastar e soltar, e integração com Firebase Firestore.
 
-First, run the development server:
+![Página Inicial](public/inicio1.png)
+![Modal](public/inicio2.png)
+![Tela firebase](public/firebase.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📋 Funcionalidades
+- Autenticação de usuários com a biblioteca next-auth.
+- Gerenciamento de estado otimizado com Redux Toolkit para caching de dados do Firestore.
+- CRUD completo para criação, leitura, atualização e exclusão de quadros e tarefas.
+- Interface interativa com suporte a arrastar e soltar usando a biblioteca react-beautiful-dnd.
+- Armazenamento de dados no Firebase Firestore.
+
+
+Gerenciador de Tarefas Kanban Full-Stack
+Bem-vindo ao repositório do Gerenciador de Tarefas Kanban, uma aplicação full-stack desenvolvida para gerenciamento de tarefas em estilo Kanban. Este projeto utiliza tecnologias modernas e boas práticas de desenvolvimento, incluindo autenticação, gerenciamento de estado, interação de arrastar e soltar, e integração com Firebase Firestore.
+
+## 🛠️ Tecnologias Utilizadas
+- **Next.js:** Framework React para renderização server-side e geração estática.
+- **Next-auth:** Autenticação simplificada para Next.js.
+- **Firebase Firestore:** Plataforma de backend como serviço para persistência de dados.
+- **Redux Toolkit:** Gerenciamento de estado moderno e simplificado.
+- **React-beautiful-dnd:** Biblioteca para interações de arrastar e soltar.
+- **Tailwind CSS:** Framework de CSS para o design responsivo e estilização da interface.
+
+
+## Como Rodar o Projeto
+
+1. Clone este repositório:
+   ```bash
+  git clone  https://github.com/Jezebel1990/kanban-app.git
+  cd kanban-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Instale as dependências:
+  ```bash
+    npm install
+   ```
+3. Execute o projeto em desenvolvimento:
+  ```bash
+    npm run dev
+   ```
+4. Abra o navegador em `http://localhost:3000` para ver a aplicação.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Licença
+Este projeto está licenciado sob a licença MIT - veja o arquivo LICENSE para mais detalhes.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Feito com ♥ por [Jezebel Guedes](https://www.linkedin.com/in/jezebel-guedes/) 👋 Entre em contato!
