@@ -1,4 +1,3 @@
-
 import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
@@ -30,8 +29,8 @@ export const fireStoreApi = createApi({
       },
       providesTags: ["Tasks"],
     }),
-    updateBoardToDb: builder.mutation<void, any>({
-      async queryFn(arg) {
+    updateBoardToDb: builder.mutation<void, { taskId: string; updatedData: any }>({
+      async queryFn({ taskId, updatedData }) {
         try {
           const session = await getSession();
           if (!session?.user) {
@@ -39,27 +38,19 @@ export const fireStoreApi = createApi({
           }
 
           const { user } = session;
-          const ref = collection(db, `users/${user.email}/tasks`);
-          const querySnapshot = await getDocs(ref);
+          const taskRef = doc(db, `users/${user.email}/tasks/${taskId}`); // Referência ao documento específico
 
-          // Identifique o ID do documento que precisa ser atualizado
-          const boardDoc = querySnapshot.docs[0]; 
-          if (!boardDoc) {
-            return { error: "Nenhum documento encontrado para atualizar." };
-          }
-
-          // Atualiza o documento com os dados fornecidos
-          await updateDoc(doc(db, `users/${user.email}/tasks/${boardDoc.id}`), {
-            boards: arg,
+          // Atualiza o documento específico com os dados fornecidos
+          await updateDoc(taskRef, {
+            boards: updatedData,
           });
 
-         
           return { data: undefined };
         } catch (error: any) {
           return { error: error.message || "Erro ao atualizar o Firestore." };
         }
       },
-      invalidatesTags: ["Tasks"], 
+      invalidatesTags: ["Tasks"], // Força a refetch dos dados
     }),
   }),
 });
